@@ -8,6 +8,7 @@ import xlrd
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from os.path import exists
+from .models import SourceOfFunds
 
 # Create your views here.
 from django.conf import settings
@@ -35,6 +36,7 @@ def index(request):
 
 def inputData(request):
     # check wehter is file uploaded or not
+
     return render(request, "dashboard/dist/input.html")
 
 
