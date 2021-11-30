@@ -12,27 +12,36 @@
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
         <script src="https://www.chartjs.org/samples/2.9.4/utils.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+<!--        <script id="data-3632-json" type="application/json"></script>-->
+        <script>
+            var data_3632 = {{ data_3632|safe }};
+            var data_3633 = {{ data_3633|safe }};
+            var data_3635 = {{ data_3635|safe }};
+            var data_3639 = {{ data_3639|safe }};
+        </script>
+
     </head>
+    {% load humanize %}
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.html">Start Bootstrap</a>
+            <a class="navbar-brand ps-3" href="index.html">SIK YPIIAH</a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-                <div class="input-group">
-                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
-                </div>
+<!--                <div class="input-group">-->
+<!--                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />-->
+<!--                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>-->
+<!--                </div>-->
             </form>
             <!-- Navbar-->
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Settings</a></li>
-                        <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                        <li><a class="dropdown-item" href="/admin">admin</a></li>
+                        <li><a class="dropdown-item" href="#!">About</a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <li><a class="dropdown-item" href="#!">Logout</a></li>
                     </ul>
@@ -44,12 +53,12 @@
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <div class="sb-sidenav-menu-heading">Core</div>
+                            <div class="sb-sidenav-menu-heading">Dana</div>
                             <a class="nav-link active" href="index.html">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
-                            <div class="sb-sidenav-menu-heading">Interface</div>
+                            <div class="sb-sidenav-menu-heading">Tagihan Unit Pendidikan</div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 Layouts
@@ -92,7 +101,7 @@
                                     </div>
                                 </nav>
                             </div>
-                            <div class="sb-sidenav-menu-heading">Addons</div>
+                            <div class="sb-sidenav-menu-heading">Absensi Pegawai</div>
                             <a class="nav-link" href="charts.html">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Charts
@@ -105,7 +114,7 @@
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
-                        Start Bootstrap
+                        {{ userdata.name }}
                     </div>
                 </nav>
             </div>
@@ -114,12 +123,13 @@
                     <div class="container-fluid px-4">
                         <h1 class="mt-4">Dashboard</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Dashboard</li>
+                            <li class="breadcrumb-item active">Sistem Informasi Keuangan</li>
                         </ol>
                         <div class="row">
                             <div class="col-xl-3 ccol-md-6">
                                 <div class="card bg-success text-white mb-4">
-                                    <div class="card-body">SDIT Anak Shalih Bogor</div>
+                                    <div class="card-header">SDIT Anak Shalih Bogor</div>
+                                    <div class="card-body">Rp {{ sum_data_38105_sdit|intcomma }}</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
                                         <a id="c-sdit" class="small text-white stretched-link" href="#">View Details</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
@@ -127,28 +137,31 @@
                                 </div>
                             </div>
                             <div class="col-xl-3 col-md-6">
-                                <div class="card bg-danger text-white mb-4" style="--bs-bg-opacity: .8;">
-                                    <div class="card-body">TKIT Aisyah Educare Anak Shalih</div>
+                                <div class="card bg-success text-white mb-4">
+                                    <div class="card-header">TKIT Aisyah Educare Anak Shalih</div>
+                                    <div class="card-body">Rp {{ sum_data_38105_tkit_ae|intcomma }}</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
+                                        <a id="c-tkit-ae" class="small text-white stretched-link" href="#">View Details</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-md-6">
-                                <div class="card bg-success text-white mb-4" style="--bs-bg-opacity: .8;">
-                                    <div class="card-body">TKIT Anak Shalih Bogor</div>
+                                <div class="card bg-success text-white mb-4">
+                                    <div class="card-header">TKIT Anak Shalih Bogor</div>
+                                    <div class="card-body">Rp {{ sum_data_38105_tkit_ans|intcomma }}</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
+                                        <a id="c-tkit-ans" class="small text-white stretched-link" href="#">View Details</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-info text-white mb-4">
-                                    <div class="card-body">Ma'had Al Bani</div>
+                                    <div class="card-header">Ma'had Al Bani</div>
+                                    <div class="card-body">Rp {{ sum_data_3635|intcomma }}</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
+                                        <a id="c-albani" class="small text-white stretched-link" href="#">View Details</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -156,28 +169,31 @@
                         </div>
                         <div class="row">
                             <div class="col-xl-4 col-md-6">
-                                <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body">Yayasan</div>
+                                <div class="card bg-secondary text-white mb-4">
+                                    <div class="card-header">Yayasan</div>
+                                    <div class="card-body">Rp {{ sum_data_3632|intcomma }}</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
+                                        <a id="c-yayasan" class="small text-white stretched-link" href="#">View Details</a>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card bg-primary text-white mb-4">
+                                    <div class="card-header">Masjid Imam Ahmad bin Hanbal</div>
+                                    <div class="card-body">Rp {{ sum_data_3633|intcomma }}</div>
+                                    <div class="card-footer d-flex align-items-center justify-content-between">
+                                        <a id="c-miah" class="small text-white stretched-link" href="#">View Details</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-md-6">
                                 <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body">Masjid Imam Ahmad bin Hanbal</div>
+                                    <div class="card-header">Masjid Nurut Tauhid</div>
+                                    <div class="card-body">Rp {{ sum_data_3639|intcomma }}</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-md-6">
-                                <div class="card bg-danger text-white mb-4">
-                                    <div class="card-body">Masjid Nurut Tauhid</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">View Details</a>
+                                        <a id="c-nuruttauhid" class="small text-white stretched-link" href="#">View Details</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
@@ -188,9 +204,36 @@
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-chart-area me-1"></i>
-                                        Area Chart Example
+                                        <span id="header-table">
+                                            Komponen Dana Yayasan
+                                        </span>
                                     </div>
-                                    <div class="card-body"><canvas id="myAreaChart" width="100%"></canvas></div>
+                                    <div class="card-body" width="100%" height="72%">
+                                        <table id="data_tabel_rekening">
+                                            <thead>
+                                                <tr>
+                                                    <th>Komponen Dana</th>
+                                                    <th>Nominal</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Komponen Dana</th>
+                                                    <th>Nominal</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+                                                {% for data, key in data_3632.items %}
+                                                    <tr>
+
+                                                        <td>{{data}}</td>
+                                                        <td>Rp{{key|intcomma}}</td>
+                                                    </tr>
+                                                {% endfor %}
+
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
 
@@ -199,9 +242,21 @@
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-chart-bar me-1"></i>
-                                        Komposisi rekening 1210038105
+                                        <span id="header-bar">rekening 1210003632</span>
                                     </div>
-                                    <div class="card-body"><canvas id="myBarChart" width="100%"></canvas></div>
+                                    <div class="card-body"><canvas id="myBarChart" width="100%" height="72%"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-area me-1"></i>
+                                        Flutuasi Dana
+                                    </div>
+                                    <div class="card-body"><canvas id="myAreaChart" width="50%" height="10%"></canvas></div>
                                 </div>
                             </div>
                         </div>

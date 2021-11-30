@@ -5,10 +5,13 @@ import mimetypes
 import csv
 import re
 import xlrd
+from django.db.models import Count, Sum, Q
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from os.path import exists
-from .models import SourceOfFunds
+from .models import *
+from SistemInformasiKeuangan.utils import validation
+from SistemInformasiKeuangan.utils import gether_balance
 
 # Create your views here.
 from django.conf import settings
@@ -44,38 +47,108 @@ def processform(request):
     save_path = ""
 
     is_uploaded = request.FILES.get('file-mutasi', False)
-    if is_uploaded:
+    bank_account = request.POST.get('bank-account', False)
+    account_banks = {"1210038105": Account38105, "1220003632": Account3632, "1220003633": Account3633,
+                     "1220003635": Account3635, "1210103639": Account3639, "adjustment": AccountAdjustment}
+    source_of_funds_text = "sumber dana"
+    # print(bank_account)
+
+    if is_uploaded and bank_account and (bank_account in account_banks.keys()):
+
+        obj_bank_account = account_banks[bank_account]
+
         if request.method == 'POST':
             save_path = os.path.join(settings.MEDIA_ROOT, request.FILES["file-mutasi"].name)
             with open(save_path, "wb") as output_file:
                 for chunk in request.FILES["file-mutasi"].chunks():
                     output_file.write(chunk)
 
-        # cek apakah file tersebut exit
+        # is file exist
         if exists(save_path):
             for typeFile in mimetypes.guess_type(save_path):
                 # print(mimetypes.guess_extension(typeFile))
                 if typeFile is not None:
                     posible_extension = (mimetypes.guess_all_extensions(typeFile))
                     if ".csv" in posible_extension:
-                        # read csv
-                        with open(save_path) as csv_file:
-                            csv_reader = csv.DictReader(csv_file)
 
-                            for data in csv_reader:
-                                # convert date excel ke object date python
-                                data['Tgl Transaksi'] = xlrd.xldate_as_datetime(int(data['Tgl Transaksi']), 0)
-                                data['Tgl Efektif'] = xlrd.xldate_as_datetime(int(data['Tgl Efektif']), 0)
+                        # Validation every transactions with their balance
+                        if validation.validation_transaction(save_path, csv, xlrd, obj_bank_account):
 
-                                # convert string to int
-                                data['Debit'] = 0 if data['Debit'] == "" else int(data['Debit'])
-                                data['Kredit'] = 0 if data['Kredit'] == "" else int(data['Kredit'])
-                                data['Saldo'] = 0 if data['Saldo'] == "" else int(data['Saldo'])
+                            # read csv
+                            with open(save_path) as csv_file:
+                                csv_reader = csv.DictReader(csv_file)
 
-                                # Mengkalsifikasikan apakah transaksi tersebut virtual account atau tidak
-                                is_va = re.search("VA : 8166", data['Keterangan'])
-                                if is_va is not None:
-                                    print(data)
+                                for data in csv_reader:
+                                    # convert date excel ke object date python
+                                    data['Tgl Transaksi'] = xlrd.xldate_as_datetime(int(data['Tgl Transaksi']), 0)
+                                    data['Tgl Efektif'] = xlrd.xldate_as_datetime(int(data['Tgl Efektif']), 0)
+
+                                    # convert string to int
+                                    data['Debit'] = 0 if data['Debit'] == "" else int(data['Debit'])
+                                    data['Kredit'] = 0 if data['Kredit'] == "" else int(data['Kredit'])
+                                    data['Saldo'] = 0 if data['Saldo'] == "" else int(data['Saldo'])
+
+                                    # Check whether CSV file containse sof or not, if yes input sofId directly to DB
+                                    if source_of_funds_text in data.keys():
+
+                                        # Import to db
+                                        id_sof = SourceOfFunds.objects.get(kode=data["sumber dana"]).id
+                                        # print(id_sof)
+                                        obj_bank_account.objects.create(reference_number=data["Nomor Referensi"],
+                                                                        transaction_date=data["Tgl Transaksi"],
+                                                                        effective_date=data["Tgl Efektif"],
+                                                                        debit=data["Debit"],
+                                                                        credit=data["Kredit"],
+                                                                        balance=data["Saldo"],
+                                                                        description=data["Keterangan"],
+                                                                        code_sof_id=id_sof)
+
+                                    else:
+
+                                        # If csv file not contain sofId then lets python create code that
+                                        # separate va transactions and non va transaction
+
+                                        # Variable that contain keterangan (descriptions of transaction)
+                                        transaction_description = data["Keterangan"]
+
+                                        is_va = re.search("VA : 8166", transaction_description)
+                                        if is_va is not None:
+                                            # Va transaction
+                                            va_code = transaction_description[is_va.start() + 9: is_va.start() + 11]
+
+                                            # get from model to determine sof form va code
+                                            va_type_object_id = VaType.objects.get(va_id=va_code).code_id
+
+                                            code_sof_id_from_va_transaction = SourceOfFunds.objects.get(
+                                                id=va_type_object_id).kode
+
+                                            # insert object to db
+                                            obj_bank_account.objects.create(reference_number=data["Nomor Referensi"],
+                                                                            transaction_date=data["Tgl Transaksi"],
+                                                                            effective_date=data["Tgl Efektif"],
+                                                                            debit=data["Debit"],
+                                                                            credit=data["Kredit"],
+                                                                            balance=data["Saldo"],
+                                                                            description=data["Keterangan"],
+                                                                            code_sof_id=code_sof_id_from_va_transaction)
+
+                                        else:
+                                            # Transaction non va
+                                            # insert object to db with code_sof_id as OTHER
+                                            other_code_sof_id = SourceOfFunds.objects.get(kode="OTHER")
+                                            # insert object to db
+                                            obj_bank_account.objects.create(reference_number=data["Nomor Referensi"],
+                                                                            transaction_date=data["Tgl Transaksi"],
+                                                                            effective_date=data["Tgl Efektif"],
+                                                                            debit=data["Debit"],
+                                                                            credit=data["Kredit"],
+                                                                            balance=data["Saldo"],
+                                                                            description=data["Keterangan"],
+                                                                            code_sof_id=code_sof_id_from_va_transaction)
+                        else:
+                            None
+                            # trasanctin not valid
+                            print("Transaction isnt valid")
 
         return render(request, "dashboard/dist/form-process.html")
     else:
@@ -93,7 +166,33 @@ def dashboard(request):
         'email': auth0user.extra_data['email'],
     }
 
+    sof_values_3632 = gether_balance.balance_of_account(SourceOfFunds, "1220003632", Account3632, AccountAdjustment)
+    sof_values_3633 = gether_balance.balance_of_account(SourceOfFunds, "1220003633", Account3633, AccountAdjustment)
+    sof_values_3635 = gether_balance.balance_of_account(SourceOfFunds, "1220003635", Account3635, AccountAdjustment)
+    sof_values_3639 = gether_balance.balance_of_account(SourceOfFunds, "1210103639", Account3639, AccountAdjustment)
+    sof_values_38105_sdit = gether_balance.balance_of_account_38105(SourceOfFunds, "1210038105", "SDIT",
+                                                                    Account3639, AccountAdjustment)
+    sof_values_38105_tkit_ae = gether_balance.balance_of_account_38105(SourceOfFunds, "1210038105", "TKIT AE",
+                                                                       Account3639, AccountAdjustment)
+    sof_values_38105_tkit_ans = gether_balance.balance_of_account_38105(SourceOfFunds, "1210038105", "TKIT ANS",
+                                                                        Account3639, AccountAdjustment)
+
+    # print(sof_values_38105_sdit)
+
     return render(request, 'dashboard/dist/index.html', {
         'auth0User': auth0user,
-        'userdata': json.dumps(userdata, indent=4)
+        'userdata': userdata,
+        'data_3632': sof_values_3632,
+        'data_3633': sof_values_3633,
+        'data_3635': sof_values_3635,
+        'data_3639': sof_values_3639,
+        'sum_data_3632': sum(sof_values_3632.values()),
+        'sum_data_3633': sum(sof_values_3633.values()),
+        'sum_data_3635': sum(sof_values_3635.values()),
+        'sum_data_3639': sum(sof_values_3639.values()),
+        'sum_data_38105_sdit': sum(sof_values_38105_sdit.values()),
+        'sum_data_38105_tkit_ae': sum(sof_values_38105_tkit_ae.values()),
+        'sum_data_38105_tkit_ans': sum(sof_values_38105_tkit_ans.values()),
+
+        # 'userdata': json.dumps(userdata, indent=4)
     })
