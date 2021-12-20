@@ -35,27 +35,27 @@ class Transactions(models.Model):
 
 
 class Account38105(Transactions):
-    None
+    pass
 
 
 class Account3632(Transactions):
-    None
+    pass
 
 
 class Account3633(Transactions):
-    None
+    pass
 
 
 class Account3635(Transactions):
-    None
+    pass
 
 
 class Account3639(Transactions):
-    None
+    pass
 
 
 class AccountAdjustment(Transactions):
-    None
+    pass
 
 # ----------------------------------------------------------------------------
 # Documentation

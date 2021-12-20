@@ -18,14 +18,11 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-import SistemInformasiKeuangan.views
+import SistemInformasiKeuangan.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('dashboard/', SistemInformasiKeuangan.views.dashboard),
-    path('input-data', SistemInformasiKeuangan.views.inputData),
-    path('input-data/processing-data/', SistemInformasiKeuangan.views.processform),
-    path("", SistemInformasiKeuangan.views.index),
+    path('', include('SistemInformasiKeuangan.urls')),
     path('', include('django.contrib.auth.urls')),
     path('', include('social_django.urls')),
 

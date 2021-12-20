@@ -5,13 +5,12 @@ import mimetypes
 import csv
 import re
 import xlrd
-from django.db.models import Count, Sum, Q
+import requests
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from os.path import exists
 from .models import *
-from SistemInformasiKeuangan.utils import validation
-from SistemInformasiKeuangan.utils import gether_balance
+from SistemInformasiKeuangan.utils import validation, gether_balance, gv_api
 
 # Create your views here.
 from django.conf import settings
@@ -44,6 +43,8 @@ def inputData(request):
 
 
 def processform(request):
+
+
     save_path = ""
 
     is_uploaded = request.FILES.get('file-mutasi', False)
@@ -65,14 +66,19 @@ def processform(request):
 
         # is file exist
         if exists(save_path):
+
             for typeFile in mimetypes.guess_type(save_path):
                 # print(mimetypes.guess_extension(typeFile))
                 if typeFile is not None:
+
                     posible_extension = (mimetypes.guess_all_extensions(typeFile))
                     if ".csv" in posible_extension:
 
-                        # Validation every transactions with their balance
-                        if validation.validation_transaction(save_path, csv, xlrd, obj_bank_account):
+                        # Kekacauan hakiki, ditinggal 1 minggu lupa semua
+                        is_adjustment = obj_bank_account == AccountAdjustment
+
+                        is_valid = validation.validation_transaction(save_path, csv, xlrd, obj_bank_account) if is_adjustment is False else True
+                        if is_valid:
 
                             # read csv
                             with open(save_path) as csv_file:
@@ -119,8 +125,12 @@ def processform(request):
                                             # get from model to determine sof form va code
                                             va_type_object_id = VaType.objects.get(va_id=va_code).code_id
 
+                                            # Get from model code_sof_id BTT (Belum Tercatat)
+
+
+
                                             code_sof_id_from_va_transaction = SourceOfFunds.objects.get(
-                                                id=va_type_object_id).kode
+                                                id=va_type_object_id).id
 
                                             # insert object to db
                                             obj_bank_account.objects.create(reference_number=data["Nomor Referensi"],
@@ -135,7 +145,7 @@ def processform(request):
                                         else:
                                             # Transaction non va
                                             # insert object to db with code_sof_id as OTHER
-                                            other_code_sof_id = SourceOfFunds.objects.get(kode="OTHER")
+                                            not_record_yet_code_sof_id = SourceOfFunds.objects.get(kode="BTT").id
                                             # insert object to db
                                             obj_bank_account.objects.create(reference_number=data["Nomor Referensi"],
                                                                             transaction_date=data["Tgl Transaksi"],
@@ -144,11 +154,13 @@ def processform(request):
                                                                             credit=data["Kredit"],
                                                                             balance=data["Saldo"],
                                                                             description=data["Keterangan"],
-                                                                            code_sof_id=code_sof_id_from_va_transaction)
+                                                                            code_sof_id=not_record_yet_code_sof_id)
                         else:
-                            None
                             # trasanctin not valid
                             print("Transaction isnt valid")
+
+                    else:
+                        print("File must be csv")
 
         return render(request, "dashboard/dist/form-process.html")
     else:
@@ -171,13 +183,23 @@ def dashboard(request):
     sof_values_3635 = gether_balance.balance_of_account(SourceOfFunds, "1220003635", Account3635, AccountAdjustment)
     sof_values_3639 = gether_balance.balance_of_account(SourceOfFunds, "1210103639", Account3639, AccountAdjustment)
     sof_values_38105_sdit = gether_balance.balance_of_account_38105(SourceOfFunds, "1210038105", "SDIT",
-                                                                    Account3639, AccountAdjustment)
+                                                                    Account38105, AccountAdjustment)
     sof_values_38105_tkit_ae = gether_balance.balance_of_account_38105(SourceOfFunds, "1210038105", "TKIT AE",
-                                                                       Account3639, AccountAdjustment)
+                                                                       Account38105, AccountAdjustment)
     sof_values_38105_tkit_ans = gether_balance.balance_of_account_38105(SourceOfFunds, "1210038105", "TKIT ANS",
-                                                                        Account3639, AccountAdjustment)
+                                                                        Account38105, AccountAdjustment)
 
-    # print(sof_values_38105_sdit)
+    balance_date_3632 = gether_balance.sum_if_date(Account3632)
+    balance_date_3633 = gether_balance.sum_if_date(Account3633)
+    balance_date_3635 = gether_balance.sum_if_date(Account3635)
+    balance_date_3639 = gether_balance.sum_if_date(Account3639)
+    balance_date_38105 = gether_balance.sum_if_date(Account38105)
+
+    # retrieve data from ypiiah.id
+    # Gets entries associated with a specific form.
+    gf_json_3632 = gv_api.respone_gv_api()
+
+    # print(gf_json_3632)
 
     return render(request, 'dashboard/dist/index.html', {
         'auth0User': auth0user,
@@ -186,6 +208,9 @@ def dashboard(request):
         'data_3633': sof_values_3633,
         'data_3635': sof_values_3635,
         'data_3639': sof_values_3639,
+        'data_38105_sdit': sof_values_38105_sdit,
+        'data_38105_tkit_ae': sof_values_38105_tkit_ae,
+        'data_38105_tkit_ans': sof_values_38105_tkit_ans,
         'sum_data_3632': sum(sof_values_3632.values()),
         'sum_data_3633': sum(sof_values_3633.values()),
         'sum_data_3635': sum(sof_values_3635.values()),
@@ -193,6 +218,13 @@ def dashboard(request):
         'sum_data_38105_sdit': sum(sof_values_38105_sdit.values()),
         'sum_data_38105_tkit_ae': sum(sof_values_38105_tkit_ae.values()),
         'sum_data_38105_tkit_ans': sum(sof_values_38105_tkit_ans.values()),
+        'sum_if_per_date_3632': balance_date_3632,
+        'sum_if_per_date_3633': balance_date_3633,
+        'sum_if_per_date_3635': balance_date_3635,
+        'sum_if_per_date_3639': balance_date_3639,
+        'sum_if_per_date_38105': balance_date_38105,
+        'gf_json_api_3632': gf_json_3632,
+        'gf_json_api_dumps_3632': json.dumps(gf_json_3632)
 
         # 'userdata': json.dumps(userdata, indent=4)
     })
