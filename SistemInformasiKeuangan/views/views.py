@@ -9,7 +9,7 @@ import requests
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from os.path import exists
-from .models import *
+from SistemInformasiKeuangan.models import *
 from SistemInformasiKeuangan.utils import validation, gether_balance, gv_api
 
 # Create your views here.
