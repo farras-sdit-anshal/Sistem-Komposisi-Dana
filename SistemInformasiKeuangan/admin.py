@@ -2,11 +2,12 @@ from django.contrib import admin
 from SistemInformasiKeuangan.models import *
 
 
-# Setting interface dari tabel di admin model
 class InterfaceAccount(admin.ModelAdmin):
     list_display = ('reference_number', "transaction_date",
                     "effective_date", "debit", "credit",
                     "balance", "description", "code_sof")
+    list_filter = ['code_sof__description']
+    search_fields = ['credit', 'debit', 'description']
 
 
 # Register your models here.

@@ -18,10 +18,33 @@
             var data_3633 = {{ data_3633|safe }};
             var data_3635 = {{ data_3635|safe }};
             var data_3639 = {{ data_3639|safe }};
+            var data_38105_sdit = {{ data_38105_sdit|safe }};
+            var data_38105_tkit_ae = {{ data_38105_tkit_ae|safe }};
+            var data_38105_tkit_ans = {{ data_38105_tkit_ans|safe }};
+            var data_sum_if_balance_3632 = {{ sum_if_per_date_3632|safe }};
+            var data_sum_if_balance_3633 = {{ sum_if_per_date_3633|safe }};
+            var data_sum_if_balance_3635 = {{ sum_if_per_date_3635|safe }};
+            var data_sum_if_balance_3639 = {{ sum_if_per_date_3639|safe }};
+            var data_sum_if_balance_38105 = {{ sum_if_per_date_38105|safe }};
+            var data_sum_38105_sdit = {{ sum_data_38105_sdit }}
+            var data_sum_38105_tkit_ae = {{ sum_data_38105_tkit_ae }}
+            var data_sum_38105_tkit_ans = {{ sum_data_38105_tkit_ans }}
+            var data_sum_3632 = {{ sum_data_3632 }}
+            var data_sum_3633 = {{ sum_data_3633 }}
+            var data_sum_3635 = {{ sum_data_3635 }}
+            var data_sum_3639 = {{ sum_data_3639 }}
+
+
+            var data_gf_json_api_3632 = {{ gf_json_api_dumps_3632|safe }};
+
+            console.log (data_gf_json_api_3632);
         </script>
 
     </head>
     {% load humanize %}
+
+
+
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
@@ -54,62 +77,62 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Dana</div>
-                            <a class="nav-link active" href="index.html">
+                            <a class="nav-link active" href="">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
-                            <div class="sb-sidenav-menu-heading">Tagihan Unit Pendidikan</div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                                Layouts
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="layout-static.html">Static Navigation</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>
-                                </nav>
-                            </div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                                Pages
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
-                                        Authentication
-                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                    </a>
-                                    <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                                        <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="login.html">Login</a>
-                                            <a class="nav-link" href="register.html">Register</a>
-                                            <a class="nav-link" href="password.html">Forgot Password</a>
-                                        </nav>
-                                    </div>
-                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
-                                        Error
-                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                    </a>
-                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                                        <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="401.html">401 Page</a>
-                                            <a class="nav-link" href="404.html">404 Page</a>
-                                            <a class="nav-link" href="500.html">500 Page</a>
-                                        </nav>
-                                    </div>
-                                </nav>
-                            </div>
-                            <div class="sb-sidenav-menu-heading">Absensi Pegawai</div>
-                            <a class="nav-link" href="charts.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Charts
-                            </a>
-                            <a class="nav-link" href="tables.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Tables
-                            </a>
+<!--                            <div class="sb-sidenav-menu-heading">Tagihan Unit Pendidikan</div>-->
+<!--                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">-->
+<!--                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>-->
+<!--                                Layouts-->
+<!--                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>-->
+<!--                            </a>-->
+<!--                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">-->
+<!--                                <nav class="sb-sidenav-menu-nested nav">-->
+<!--                                    <a class="nav-link" href="layout-static.html">Static Navigation</a>-->
+<!--                                    <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>-->
+<!--                                </nav>-->
+<!--                            </div>-->
+<!--                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">-->
+<!--                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>-->
+<!--                                Pages-->
+<!--                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>-->
+<!--                            </a>-->
+<!--                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">-->
+<!--                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">-->
+<!--                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">-->
+<!--                                        Authentication-->
+<!--                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>-->
+<!--                                    </a>-->
+<!--                                    <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">-->
+<!--                                        <nav class="sb-sidenav-menu-nested nav">-->
+<!--                                            <a class="nav-link" href="login.html">Login</a>-->
+<!--                                            <a class="nav-link" href="register.html">Register</a>-->
+<!--                                            <a class="nav-link" href="password.html">Forgot Password</a>-->
+<!--                                        </nav>-->
+<!--                                    </div>-->
+<!--                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">-->
+<!--                                        Error-->
+<!--                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>-->
+<!--                                    </a>-->
+<!--                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">-->
+<!--                                        <nav class="sb-sidenav-menu-nested nav">-->
+<!--                                            <a class="nav-link" href="401.html">401 Page</a>-->
+<!--                                            <a class="nav-link" href="404.html">404 Page</a>-->
+<!--                                            <a class="nav-link" href="500.html">500 Page</a>-->
+<!--                                        </nav>-->
+<!--                                    </div>-->
+<!--                                </nav>-->
+<!--                            </div>-->
+<!--                            <div class="sb-sidenav-menu-heading">Absensi Pegawai</div>-->
+<!--                            <a class="nav-link" href="charts.html">-->
+<!--                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>-->
+<!--                                Charts-->
+<!--                            </a>-->
+<!--                            <a class="nav-link" href="tables.html">-->
+<!--                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>-->
+<!--                                Tables-->
+<!--                            </a>-->
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -126,7 +149,21 @@
                             <li class="breadcrumb-item active">Sistem Informasi Keuangan</li>
                         </ol>
                         <div class="row">
-                            <div class="col-xl-3 ccol-md-6">
+                            <div class="col-xl-12">
+                                <div class="card mb-4">
+                                        <div class="card-header">
+                                            <i class="fas fa-chart-bar me-1"></i>
+                                            <span id="header-consolidation">Posisi Kas Konsolidasi</span>
+                                        </div>
+                                    <div class="card-body"><canvas id="myBarChartConsolidation" width="100%" height="20%"></canvas></div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-xl-4 ccol-md-6">
                                 <div class="card bg-success text-white mb-4">
                                     <div class="card-header">SDIT Anak Shalih Bogor</div>
                                     <div class="card-body">Rp {{ sum_data_38105_sdit|intcomma }}</div>
@@ -136,7 +173,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-md-6">
+                            <div class="col-xl-4 col-md-6">
                                 <div class="card bg-success text-white mb-4">
                                     <div class="card-header">TKIT Aisyah Educare Anak Shalih</div>
                                     <div class="card-body">Rp {{ sum_data_38105_tkit_ae|intcomma }}</div>
@@ -146,7 +183,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-md-6">
+                            <div class="col-xl-4 col-md-6">
                                 <div class="card bg-success text-white mb-4">
                                     <div class="card-header">TKIT Anak Shalih Bogor</div>
                                     <div class="card-body">Rp {{ sum_data_38105_tkit_ans|intcomma }}</div>
@@ -156,6 +193,8 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-info text-white mb-4">
                                     <div class="card-header">Ma'had Al Bani</div>
@@ -166,10 +205,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xl-4 col-md-6">
-                                <div class="card bg-secondary text-white mb-4">
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card text-white mb-4" style="background-color:#6610f2;">
                                     <div class="card-header">Yayasan</div>
                                     <div class="card-body">Rp {{ sum_data_3632|intcomma }}</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
@@ -178,8 +215,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-md-6">
-                                <div class="card bg-primary text-white mb-4">
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card bg-danger text-white mb-4">
                                     <div class="card-header">Masjid Imam Ahmad bin Hanbal</div>
                                     <div class="card-body">Rp {{ sum_data_3633|intcomma }}</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
@@ -188,8 +225,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-md-6">
-                                <div class="card bg-danger text-white mb-4">
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card bg-primary  text-white mb-4">
                                     <div class="card-header">Masjid Nurut Tauhid</div>
                                     <div class="card-body">Rp {{ sum_data_3639|intcomma }}</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
@@ -200,7 +237,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xl-6">
+                            <div class="col-xl-5">
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-chart-area me-1"></i>
@@ -238,7 +275,7 @@
                             </div>
 
 
-                            <div class="col-xl-6">
+                            <div class="col-xl-7">
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-chart-bar me-1"></i>
@@ -254,7 +291,7 @@
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-chart-area me-1"></i>
-                                        Flutuasi Dana
+                                        Line Chart Kondisi Dana
                                     </div>
                                     <div class="card-body"><canvas id="myAreaChart" width="50%" height="10%"></canvas></div>
                                 </div>
@@ -287,122 +324,18 @@
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                        <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                            <td>Edinburgh</td>
-                                            <td>61</td>
-                                            <td>2011/04/25</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Garrett Winters</td>
-                                            <td>Accountant</td>
-                                            <td>Tokyo</td>
-                                            <td>63</td>
-                                            <td>2011/07/25</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ashton Cox</td>
-                                            <td>Junior Technical Author</td>
-                                            <td>San Francisco</td>
-                                            <td>66</td>
-                                            <td>2009/01/12</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Cedric Kelly</td>
-                                            <td>Senior Javascript Developer</td>
-                                            <td>Edinburgh</td>
-                                            <td>22</td>
-                                            <td>2012/03/29</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Airi Satou</td>
-                                            <td>Accountant</td>
-                                            <td>Tokyo</td>
-                                            <td>33</td>
-                                            <td>2008/11/28</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Brielle Williamson</td>
-                                            <td>Integration Specialist</td>
-                                            <td>New York</td>
-                                            <td>61</td>
-                                            <td>2012/12/02</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Herrod Chandler</td>
-                                            <td>Sales Assistant</td>
-                                            <td>San Francisco</td>
-                                            <td>59</td>
-                                            <td>2012/08/06</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Rhona Davidson</td>
-                                            <td>Integration Specialist</td>
-                                            <td>Tokyo</td>
-                                            <td>55</td>
-                                            <td>2010/10/14</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Colleen Hurst</td>
-                                            <td>Javascript Developer</td>
-                                            <td>San Francisco</td>
-                                            <td>39</td>
-                                            <td>2009/09/15</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Sonya Frost</td>
-                                            <td>Software Engineer</td>
-                                            <td>Edinburgh</td>
-                                            <td>23</td>
-                                            <td>2008/12/13</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Jena Gaines</td>
-                                            <td>Office Manager</td>
-                                            <td>London</td>
-                                            <td>30</td>
-                                            <td>2008/12/19</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Quinn Flynn</td>
-                                            <td>Support Lead</td>
-                                            <td>Edinburgh</td>
-                                            <td>22</td>
-                                            <td>2013/03/03</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Charde Marshall</td>
-                                            <td>Regional Director</td>
-                                            <td>San Francisco</td>
-                                            <td>36</td>
-                                            <td>2008/10/16</td>
+                                    {% for data in gf_json_api_3632.entries %}
 
-                                        </tr>
                                         <tr>
-                                            <td>Haley Kennedy</td>
-                                            <td>Senior Marketing Designer</td>
-                                            <td>London</td>
-                                            <td>43</td>
-                                            <td>2012/12/18</td>
-
+                                            <td>{{ data.2 }}</td>
+                                            <td>{{ data.27 }}</td>
+                                            <td>{{ data.date_created }}</td>
+                                            <td>Rp{{ data.6|intcomma }}</td>
+                                            <td>{{ data.workflow_final_status }}</td>
                                         </tr>
-                                        <tr>
-                                            <td>Tatyana Fitzpatrick</td>
-                                            <td>Regional Director</td>
-                                            <td>London</td>
-                                            <td>19</td>
-                                            <td>2010/03/17</td>
 
-                                        </tr>
-                                        <tr>
-                                            <td>Michael Silva</td>
-                                            <td>Marketing Designer</td>
-                                            <td>London</td>
-                                            <td>66</td>
-                                            <td>2012/11/27</td>
+                                    {% endfor %}
 
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -412,7 +345,7 @@
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2021</div>
+                            <div class="text-muted">Develop by Abu Faris Ma'ruf 2021</div>
                             <div>
                                 <a href="#">Privacy Policy</a>
                                 &middot;
@@ -431,8 +364,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="{% static 'assets/demo/chart-area-demo.js' %}"></script>
-        <script src="{% static 'assets/demo/cash-flow-chart-38105.js' %}"></script>
         <script src="{% static 'assets/demo/chart-bar-demo.js' %}"></script>
+        <script src="{% static 'assets/demo/chart-bar-consolidation.js' %}"></script>
         <script src="{% static 'assets/demo/myscript.js' %}"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
         <script src="{% static 'js/datatables-simple-demo.js' %}"></script>
