@@ -28,3 +28,8 @@ def validation_transaction(save_path, csv, xlrd, obj_bank_account):
                 list_validation_value.append(False)
 
     return not False in list_validation_value
+
+
+def validation_groups(user, group_name):
+    groups = list(user.groups.all().values_list("name", flat=True))
+    return True if group_name in groups else False

@@ -41,16 +41,17 @@ def inputData(request):
 
     user = request.user
     if user.is_authenticated:
-        return render(request, "dashboard/dist/input.html")
+        if validation.validation_groups(user, "Accountant"):
+            return render(request, "dashboard/dist/input.html")
+        else:
+            demanded_access = "Komposisi Dana"
+            return render(request, "dashboard/dist/401.html", {'userData': user, 'demand_access': demanded_access})
+
     else:
         return render(request, 'index.html')
 
 
-
-
 def processform(request):
-
-
     save_path = ""
 
     is_uploaded = request.FILES.get('file-mutasi', False)
@@ -175,63 +176,71 @@ def processform(request):
 
 @login_required
 def dashboard(request):
+
     user = request.user
-    auth0user = user.social_auth.get(provider='auth0')
-    userdata = {
-        'user_id': auth0user.uid,
-        'name': user.first_name,
-        'picture': auth0user.extra_data['picture'],
-        'email': auth0user.extra_data['email'],
-    }
 
-    sof_values_3632 = gether_balance.balance_of_account(SourceOfFunds, "1220003632", Account3632, AccountAdjustment)
-    sof_values_3633 = gether_balance.balance_of_account(SourceOfFunds, "1220003633", Account3633, AccountAdjustment)
-    sof_values_3635 = gether_balance.balance_of_account(SourceOfFunds, "1220003635", Account3635, AccountAdjustment)
-    sof_values_3639 = gether_balance.balance_of_account(SourceOfFunds, "1210103639", Account3639, AccountAdjustment)
-    sof_values_38105_sdit = gether_balance.balance_of_account_38105(SourceOfFunds, "1210038105", "SDIT",
-                                                                    Account38105, AccountAdjustment)
-    sof_values_38105_tkit_ae = gether_balance.balance_of_account_38105(SourceOfFunds, "1210038105", "TKIT AE",
-                                                                       Account38105, AccountAdjustment)
-    sof_values_38105_tkit_ans = gether_balance.balance_of_account_38105(SourceOfFunds, "1210038105", "TKIT ANS",
+    # check wether they have acceses to dashboard or not
+    if validation.validation_groups(user, "g_keuangan"):
+
+        auth0user = user.social_auth.get(provider='auth0')
+        userdata = {
+            'user_id': auth0user.uid,
+            'name': user.first_name,
+            'picture': auth0user.extra_data['picture'],
+            'email': auth0user.extra_data['email'],
+        }
+
+        sof_values_3632 = gether_balance.balance_of_account(SourceOfFunds, "1220003632", Account3632, AccountAdjustment)
+        sof_values_3633 = gether_balance.balance_of_account(SourceOfFunds, "1220003633", Account3633, AccountAdjustment)
+        sof_values_3635 = gether_balance.balance_of_account(SourceOfFunds, "1220003635", Account3635, AccountAdjustment)
+        sof_values_3639 = gether_balance.balance_of_account(SourceOfFunds, "1210103639", Account3639, AccountAdjustment)
+        sof_values_38105_sdit = gether_balance.balance_of_account_38105(SourceOfFunds, "1210038105", "SDIT",
                                                                         Account38105, AccountAdjustment)
+        sof_values_38105_tkit_ae = gether_balance.balance_of_account_38105(SourceOfFunds, "1210038105", "TKIT AE",
+                                                                           Account38105, AccountAdjustment)
+        sof_values_38105_tkit_ans = gether_balance.balance_of_account_38105(SourceOfFunds, "1210038105", "TKIT ANS",
+                                                                            Account38105, AccountAdjustment)
 
-    balance_date_3632 = gether_balance.sum_if_date(Account3632)
-    balance_date_3633 = gether_balance.sum_if_date(Account3633)
-    balance_date_3635 = gether_balance.sum_if_date(Account3635)
-    balance_date_3639 = gether_balance.sum_if_date(Account3639)
-    balance_date_38105 = gether_balance.sum_if_date(Account38105)
+        balance_date_3632 = gether_balance.sum_if_date(Account3632)
+        balance_date_3633 = gether_balance.sum_if_date(Account3633)
+        balance_date_3635 = gether_balance.sum_if_date(Account3635)
+        balance_date_3639 = gether_balance.sum_if_date(Account3639)
+        balance_date_38105 = gether_balance.sum_if_date(Account38105)
 
-    # retrieve data from ypiiah.id
-    # Gets entries associated with a specific forms.
-    gf_json_3632 = gv_api.respone_gv_api()
+        # retrieve data from ypiiah.id
+        # Gets entries associated with a specific forms.
+        gf_json_3632 = gv_api.respone_gv_api()
 
-    # print(gf_json_3632)
+        # print(gf_json_3632)
 
-    return render(request, 'dashboard/dist/index.html', {
-        'auth0User': auth0user,
-        'userdata': userdata,
-        'data_3632': sof_values_3632,
-        'data_3633': sof_values_3633,
-        'data_3635': sof_values_3635,
-        'data_3639': sof_values_3639,
-        'data_38105_sdit': sof_values_38105_sdit,
-        'data_38105_tkit_ae': sof_values_38105_tkit_ae,
-        'data_38105_tkit_ans': sof_values_38105_tkit_ans,
-        'sum_data_3632': sum(sof_values_3632.values()),
-        'sum_data_3633': sum(sof_values_3633.values()),
-        'sum_data_3635': sum(sof_values_3635.values()),
-        'sum_data_3639': sum(sof_values_3639.values()),
-        'sum_data_38105_sdit': sum(sof_values_38105_sdit.values()),
-        'sum_data_38105_tkit_ae': sum(sof_values_38105_tkit_ae.values()),
-        'sum_data_38105_tkit_ans': sum(sof_values_38105_tkit_ans.values()),
-        'sum_if_per_date_3632': balance_date_3632,
-        'sum_if_per_date_3633': balance_date_3633,
-        'sum_if_per_date_3635': balance_date_3635,
-        'sum_if_per_date_3639': balance_date_3639,
-        'sum_if_per_date_38105': balance_date_38105,
-        'gf_json_api_3632': gf_json_3632,
-        'gf_json_api_dumps_3632': json.dumps(gf_json_3632),
-        "user": request.user
+        return render(request, 'dashboard/dist/index.html', {
+            'auth0User': auth0user,
+            'userdata': userdata,
+            'data_3632': sof_values_3632,
+            'data_3633': sof_values_3633,
+            'data_3635': sof_values_3635,
+            'data_3639': sof_values_3639,
+            'data_38105_sdit': sof_values_38105_sdit,
+            'data_38105_tkit_ae': sof_values_38105_tkit_ae,
+            'data_38105_tkit_ans': sof_values_38105_tkit_ans,
+            'sum_data_3632': sum(sof_values_3632.values()),
+            'sum_data_3633': sum(sof_values_3633.values()),
+            'sum_data_3635': sum(sof_values_3635.values()),
+            'sum_data_3639': sum(sof_values_3639.values()),
+            'sum_data_38105_sdit': sum(sof_values_38105_sdit.values()),
+            'sum_data_38105_tkit_ae': sum(sof_values_38105_tkit_ae.values()),
+            'sum_data_38105_tkit_ans': sum(sof_values_38105_tkit_ans.values()),
+            'sum_if_per_date_3632': balance_date_3632,
+            'sum_if_per_date_3633': balance_date_3633,
+            'sum_if_per_date_3635': balance_date_3635,
+            'sum_if_per_date_3639': balance_date_3639,
+            'sum_if_per_date_38105': balance_date_38105,
+            'gf_json_api_3632': gf_json_3632,
+            'gf_json_api_dumps_3632': json.dumps(gf_json_3632),
+            "user": request.user
 
-        # 'userdata': json.dumps(userdata, indent=4)
-    })
+            # 'userdata': json.dumps(userdata, indent=4)
+        })
+    else:
+        demanded_access = "Komposisi Dana"
+        return render(request, "dashboard/dist/401.html", {'userData': user, 'demand_access': demanded_access })
