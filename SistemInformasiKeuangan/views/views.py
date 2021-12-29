@@ -39,7 +39,13 @@ def index(request):
 def inputData(request):
     # check wehter is file uploaded or not
 
-    return render(request, "dashboard/dist/input.html")
+    user = request.user
+    if user.is_authenticated:
+        return render(request, "dashboard/dist/input.html")
+    else:
+        return render(request, 'index.html')
+
+
 
 
 def processform(request):
@@ -122,7 +128,7 @@ def processform(request):
                                             # Va transaction
                                             va_code = transaction_description[is_va.start() + 9: is_va.start() + 11]
 
-                                            # get from model to determine sof form va code
+                                            # get from model to determine sof forms va code
                                             va_type_object_id = VaType.objects.get(va_id=va_code).code_id
 
                                             # Get from model code_sof_id BTT (Belum Tercatat)
@@ -162,7 +168,7 @@ def processform(request):
                     else:
                         print("File must be csv")
 
-        return render(request, "dashboard/dist/form-process.html")
+        return render(request, "dashboard/dist/forms-process.html")
     else:
         return redirect(inputData)
 
@@ -196,7 +202,7 @@ def dashboard(request):
     balance_date_38105 = gether_balance.sum_if_date(Account38105)
 
     # retrieve data from ypiiah.id
-    # Gets entries associated with a specific form.
+    # Gets entries associated with a specific forms.
     gf_json_3632 = gv_api.respone_gv_api()
 
     # print(gf_json_3632)
@@ -224,7 +230,8 @@ def dashboard(request):
         'sum_if_per_date_3639': balance_date_3639,
         'sum_if_per_date_38105': balance_date_38105,
         'gf_json_api_3632': gf_json_3632,
-        'gf_json_api_dumps_3632': json.dumps(gf_json_3632)
+        'gf_json_api_dumps_3632': json.dumps(gf_json_3632),
+        "user": request.user
 
         # 'userdata': json.dumps(userdata, indent=4)
     })

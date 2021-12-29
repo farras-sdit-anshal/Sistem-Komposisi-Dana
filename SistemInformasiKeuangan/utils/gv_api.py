@@ -1,12 +1,12 @@
 import requests
 
 """
-Documentation for retrieve from gravity form
+Documentation for retrieve from gravity forms
 
 -> https://docs.gravityforms.com/rest-api-v2/#authentication-2
 
 
-Gets entries associated with a specific form.
+Gets entries associated with a specific forms.
 https://localhost/wp-json/gf/v2/forms/185/entries
 
 ------------------------------------------------------------------------------------------------------------------------
