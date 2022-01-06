@@ -28,7 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = ["192.168.1.236",
                  "127.0.0.1",
                  "localhost",
-                 "192.168.1.199"]
+                 "192.168.1.199",
+                 "121302220960.ip-dynamic.com"]
 
 
 # Application definition
