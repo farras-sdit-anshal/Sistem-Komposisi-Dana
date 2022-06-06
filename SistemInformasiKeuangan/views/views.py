@@ -15,6 +15,9 @@ from SistemInformasiKeuangan.utils import validation, gether_balance, gv_api
 # Create your views here.
 from django.conf import settings
 
+# enable iframe
+from django.views.decorators.clickjacking import xframe_options_exempt
+
 
 def home(request):
     return render(request, "index.html")
@@ -175,6 +178,7 @@ def processform(request):
 
 
 @login_required
+@xframe_options_exempt
 def dashboard(request):
 
     user = request.user
