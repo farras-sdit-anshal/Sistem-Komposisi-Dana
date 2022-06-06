@@ -4,6 +4,7 @@ import SistemInformasiKeuangan.views.adjustment
 
 urlpatterns = [
     path('dashboard/', SistemInformasiKeuangan.views.views.dashboard),
+    path('logout/', SistemInformasiKeuangan.views.views.logout),
     path('input-data/', SistemInformasiKeuangan.views.views.inputData),
     path('input-data/processing-data/', SistemInformasiKeuangan.views.views.processform),
     path('input-data/adjustment/', SistemInformasiKeuangan.views.adjustment.choose_adjustment),
