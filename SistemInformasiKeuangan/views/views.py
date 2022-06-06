@@ -8,6 +8,7 @@ import xlrd
 import requests
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout as auth_logout
 from os.path import exists
 from SistemInformasiKeuangan.models import *
 from SistemInformasiKeuangan.utils import validation, gether_balance, gv_api
@@ -29,6 +30,13 @@ def dashboard(request):
 
 def login(request):
     return render(request, "dashboard/dist/login.html")
+
+
+def logout(request):
+    """Logs out user"""
+    auth_logout(request)
+    # return render_to_response('home.html', {}, RequestContext(request))
+    return render(request, "index.html")
 
 
 def index(request):
